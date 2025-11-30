@@ -1,9 +1,11 @@
-/* assets/app.js */
 (function () {
   "use strict";
 
   function qs(sel, root) {
     return (root || document).querySelector(sel);
+  }
+  function qsa(sel, root) {
+    return Array.prototype.slice.call((root || document).querySelectorAll(sel));
   }
   function create(tag, className) {
     var el = document.createElement(tag);
@@ -74,6 +76,42 @@
     return allItemsCache;
   }
 
+  /* THEME HANDLING */
+  function applyTheme(theme) {
+    var body = document.body;
+    var btn = qs("#theme-toggle");
+    if (theme === "light") {
+      body.classList.add("theme-light");
+      if (btn) btn.innerHTML = '<i class="fas fa-sun"></i>';
+    } else {
+      body.classList.remove("theme-light");
+      if (btn) btn.innerHTML = '<i class="fas fa-moon"></i>';
+    }
+  }
+
+  function initTheme() {
+    var stored = null;
+    try {
+      stored = localStorage.getItem("rp_theme");
+    } catch (e) {}
+    var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    var theme = stored || (prefersDark ? "dark" : "dark");
+    applyTheme(theme);
+
+    var btn = qs("#theme-toggle");
+    if (btn) {
+      btn.addEventListener("click", function () {
+        var current = document.body.classList.contains("theme-light") ? "light" : "dark";
+        var next = current === "light" ? "dark" : "light";
+        applyTheme(next);
+        try {
+          localStorage.setItem("rp_theme", next);
+        } catch (e) {}
+      });
+    }
+  }
+
+  /* NAVIGATION */
   function initNav() {
     var ul = qs(".menu-links");
     if (!ul) return;
@@ -116,6 +154,7 @@
     });
   }
 
+  /* CARD CREATION */
   function createCard(item, isSeeMore) {
     var card = create("article", "deal-card");
     if (isSeeMore) {
@@ -178,7 +217,7 @@
     return card;
   }
 
-  /* HOME: mobile vs desktop cards */
+  /* HOME: mobile vs desktop cards + arrows + animation */
   function initHome() {
     var anchor = qs("#home-cards-anchor");
     if (!anchor) return;
@@ -227,12 +266,26 @@
         var rightBtn = create("button", "scroll-btn right");
         rightBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
 
-        function scrollByDir(dir) {
-          var w = track.getBoundingClientRect().width || 300;
-          track.scrollBy({ left: dir * (w * 0.8), behavior: "smooth" });
+        function animateCards() {
+          var cards = qsa(".deal-card", track);
+          cards.forEach(function (c) {
+            c.classList.add("swipe-animate");
+            setTimeout(function () {
+              c.classList.remove("swipe-animate");
+            }, 250);
+          });
         }
-        leftBtn.addEventListener("click", function () { scrollByDir(-1); });
-        rightBtn.addEventListener("click", function () { scrollByDir(1); });
+
+        function scrollByCard(dir) {
+          var firstCard = track.querySelector(".deal-card");
+          if (!firstCard) return;
+          var cardWidth = firstCard.getBoundingClientRect().width || 260;
+          track.scrollBy({ left: dir * (cardWidth + 16), behavior: "smooth" });
+          animateCards();
+        }
+
+        leftBtn.addEventListener("click", function () { scrollByCard(-1); });
+        rightBtn.addEventListener("click", function () { scrollByCard(1); });
 
         wrap.appendChild(leftBtn);
         wrap.appendChild(rightBtn);
@@ -243,7 +296,7 @@
     });
   }
 
-  /* CATEGORY PAGES: show 9, then load more 9 */
+  /* CATEGORY PAGES: 9 + load more 9 */
   function initCategoryPage() {
     var main = qs("#main[data-src]");
     if (!main) return;
@@ -291,7 +344,7 @@
         loadMoreBtn.textContent = "আরো ৯ টি দেখুন";
         loadMoreBtn.addEventListener("click", renderNextBatch);
 
-        renderNextBatch(); // first 9
+        renderNextBatch();
         if (items.length > batchSize) {
           main.appendChild(loadMoreBtn);
         }
@@ -422,6 +475,7 @@
   }
 
   function init() {
+    initTheme();
     initNav();
     initSearch();
     initHome();

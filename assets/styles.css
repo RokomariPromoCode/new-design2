@@ -1,4 +1,3 @@
-
 /* Global reset & base */
 *,
 *::before,
@@ -56,7 +55,6 @@ p {
   color: #cbd5f5;
 }
 
-/* Page title */
 .page-title {
   font-size: 1.8rem;
   font-weight: 700;
@@ -126,7 +124,6 @@ p {
   box-shadow: 0 0 0 2px rgba(26, 188, 156, 0.2);
 }
 
-/* search icons */
 .search-icon-btn,
 .clear-btn {
   position: absolute;
@@ -157,7 +154,7 @@ p {
   border-radius: 12px;
   border: 1px solid #1f2937;
   box-shadow: 0 15px 35px rgba(15, 23, 42, 0.9);
-  max-height: 360px;
+  max-height: 480px;
   overflow-y: auto;
   padding: 6px;
   display: none;
@@ -214,11 +211,22 @@ p {
   text-overflow: ellipsis;
 }
 
+/* Search dropdown mobile: 90% width & height */
+@media (max-width: 767px) {
+  .search-results-dropdown {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    width: 90vw;
+    max-height: 90vh;
+  }
+}
+
 /* Menu */
 .header-menu {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .menu-links {
@@ -241,6 +249,24 @@ p {
   color: #22c55e;
 }
 
+/* Theme toggle button */
+.theme-toggle-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 1px solid #1f2937;
+  background: #020617;
+  color: #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.theme-toggle-btn i {
+  font-size: 14px;
+}
+
 .hamburger {
   display: flex;
   align-items: center;
@@ -257,7 +283,6 @@ p {
   font-size: 16px;
 }
 
-/* Mobile nav dropdown */
 @media (max-width: 767px) {
   .header-container {
     align-items: center;
@@ -369,11 +394,12 @@ p {
   overflow-x: auto;
   scroll-behavior: smooth;
   padding: 4px 2px 8px;
+  scroll-snap-type: x mandatory;
 }
 
-/* On desktop, cards have fixed width; on mobile, 1 per view */
 .home-cards-track .deal-card {
   flex: 0 0 260px;
+  scroll-snap-align: start;
 }
 
 @media (max-width: 767px) {
@@ -391,7 +417,7 @@ p {
   border-radius: 999px;
 }
 
-/* scroll buttons visible on desktop only */
+/* scroll buttons – visible for all */
 .scroll-btn {
   position: absolute;
   top: 50%;
@@ -402,7 +428,7 @@ p {
   border: none;
   background: rgba(15, 23, 42, 0.9);
   color: #f9fafb;
-  display: none;
+  display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
@@ -418,12 +444,6 @@ p {
 
 .scroll-btn:hover {
   background: #020617;
-}
-
-@media (min-width: 768px) {
-  .scroll-btn {
-    display: flex;
-  }
 }
 
 /* ===== Cards ===== */
@@ -443,7 +463,11 @@ p {
   min-width: 240px;
   max-width: 280px;
   animation: cardFadeUp 0.35s ease both;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.deal-card.swipe-animate {
+  transform: scale(0.97);
 }
 
 .deal-card:hover {
@@ -459,7 +483,7 @@ p {
   background: #020617;
 }
 
-/* Card body + line clamping */
+/* Card body + clamps */
 .deal-body {
   padding: 10px 14px 8px;
   display: flex;
@@ -524,7 +548,7 @@ p {
   filter: brightness(0.95);
 }
 
-/* “See all” card */
+/* See-more card */
 .deal-card.see-more-card {
   align-items: center;
   justify-content: center;
@@ -542,7 +566,7 @@ p {
   margin-bottom: 6px;
 }
 
-/* ===== Category pages grid ===== */
+/* Category grid */
 .cards-grid {
   margin-top: 18px;
   display: grid;
@@ -562,7 +586,7 @@ p {
   }
 }
 
-/* ===== FAQ section ===== */
+/* FAQ */
 .faq-section {
   padding: 50px 0 60px;
   background: #020617;
@@ -638,7 +662,7 @@ p {
   color: #cbd5f5;
 }
 
-/* ===== Footer ===== */
+/* Footer */
 .main-footer {
   background-color: #020617;
   color: #e5e7eb;
@@ -661,13 +685,12 @@ p {
   padding: 0 20px;
 }
 
-/* request form */
 .footer-request-area {
   background: #0b1120;
   padding: 40px;
   border-radius: 15px;
   margin-top: -50px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  box-shadow: 0 10px 25px rgba(0,০,০,0.5);
   border: 1px solid #1f2937;
   position: relative;
   z-index: 10;
@@ -717,7 +740,6 @@ p {
 .f-btn i { margin-left: 6px; }
 .f-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(26, 188, 156, 0.6); }
 
-/* footer columns */
 .footer-content {
   padding: 70px 0 40px;
   display: grid;
@@ -778,7 +800,6 @@ p {
   color: #9ca3af;
 }
 
-/* copyright */
 .footer-bottom {
   background: #020617;
   padding: 20px 0;
@@ -789,7 +810,6 @@ p {
 }
 .footer-bottom span { color: #1abc9c; font-weight: bold; }
 
-/* responsive footer */
 @media (max-width: 900px) {
   .footer-form { grid-template-columns: 1fr 1fr; }
   .f-btn { grid-column: span 2; }
@@ -802,7 +822,7 @@ p {
   .footer-request-area { margin-top: 0; border-radius: 0; border-left: none; border-right: none; }
 }
 
-/* ===== Contact form on contact page ===== */
+/* Contact form */
 .contact-form {
   margin-top: 18px;
   max-width: 520px;
@@ -842,7 +862,7 @@ p {
   margin-top: 4px;
 }
 
-/* Floating WhatsApp button */
+/* WhatsApp button */
 .wa-floating {
   position: fixed;
   right: 16px;
@@ -863,9 +883,192 @@ p {
   font-size: 24px;
 }
 
-/* small tweak */
 @media (max-width: 767px) {
   .home-category-header h2 {
     font-size: 1.1rem;
   }
+}
+
+/* ===== LIGHT THEME ===== */
+body.theme-light {
+  background-color: #f3f4f6;
+  color: #111827;
+}
+
+body.theme-light h1,
+body.theme-light h2,
+body.theme-light h3 {
+  color: #111827;
+}
+
+body.theme-light p {
+  color: #374151;
+}
+
+body.theme-light .modern-header {
+  background: #ffffff;
+  box-shadow: 0 1px 8px rgba(15, 23, 42, 0.12);
+}
+
+body.theme-light .header-top-border {
+  background: linear-gradient(90deg, #2563eb, #22c55e, #f97316);
+}
+
+body.theme-light .search-box input {
+  background: #f9fafb;
+  border-color: #d1d5db;
+  color: #111827;
+}
+
+body.theme-light .search-box input::placeholder {
+  color: #9ca3af;
+}
+
+body.theme-light .theme-toggle-btn {
+  background: #f9fafb;
+  border-color: #d1d5db;
+  color: #111827;
+}
+
+body.theme-light .hamburger {
+  border-color: #d1d5db;
+  color: #111827;
+}
+
+body.theme-light .menu-links a {
+  color: #4b5563;
+}
+
+body.theme-light .menu-links a:hover,
+body.theme-light .menu-links a.active {
+  background: #e5e7eb;
+  color: #2563eb;
+}
+
+body.theme-light .home-intro p {
+  color: #4b5563;
+}
+
+body.theme-light .home-category-header a {
+  color: #2563eb;
+}
+
+body.theme-light .home-cards-track::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+}
+
+body.theme-light .deal-card {
+  background: #ffffff;
+  border-color: #e5e7eb;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+}
+
+body.theme-light .deal-card img {
+  background: #f9fafb;
+}
+
+body.theme-light .deal-title {
+  color: #111827;
+}
+
+body.theme-light .deal-meta {
+  color: #6b7280;
+}
+
+body.theme-light .deal-desc {
+  color: #4b5563;
+}
+
+body.theme-light .deal-footer {
+  border-top-color: #e5e7eb;
+}
+
+body.theme-light .deal-hint {
+  color: #9ca3af;
+}
+
+body.theme-light .faq-section {
+  background: #f9fafb;
+  color: #111827;
+}
+
+body.theme-light .faq-item {
+  background: #ffffff;
+  border-color: #e5e7eb;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.06);
+}
+
+body.theme-light .faq-body {
+  color: #4b5563;
+}
+
+body.theme-light .main-footer {
+  background-color: #f9fafb;
+  color: #111827;
+}
+
+body.theme-light .footer-request-area {
+  background: #ffffff;
+  border-color: #e5e7eb;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+}
+
+body.theme-light .footer-about p {
+  color: #4b5563;
+}
+
+body.theme-light .footer-links a {
+  color: #374151;
+}
+
+body.theme-light .footer-links a i {
+  color: #9ca3af;
+}
+
+body.theme-light .footer-links a:hover {
+  color: #2563eb;
+}
+
+body.theme-light .social-icon {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+body.theme-light .footer-affiliate-box {
+  background: #f3f4f6;
+  color: #4b5563;
+}
+
+body.theme-light .footer-bottom {
+  background: #e5e7eb;
+  border-top-color: #d1d5db;
+  color: #6b7280;
+}
+
+body.theme-light .footer-bottom span {
+  color: #2563eb;
+}
+
+body.theme-light .contact-form input,
+body.theme-light .contact-form textarea {
+  background: #ffffff;
+  border-color: #d1d5db;
+  color: #111827;
+}
+
+body.theme-light .contact-form input:focus,
+body.theme-light .contact-form textarea:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+body.theme-light .search-results-dropdown {
+  background: #ffffff;
+  border-color: #e5e7eb;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.16);
+}
+
+body.theme-light .search-results-dropdown .result-item:hover {
+  background: #f3f4f6;
+  border-color: #bfdbfe;
 }
