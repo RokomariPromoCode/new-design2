@@ -1,20 +1,10 @@
-/* assets/app.js – rebuilt, cleaner version */
+/* assets/app.js */
 (function () {
   "use strict";
-
-  var SITE_BASE = (window.SITE_BASE || "").replace(/\/+$/, "");
-
-  function rel(url) {
-    if (!url) return "";
-    if (/^https?:\/\//i.test(url)) return url;
-    if (!url.startsWith("/")) url = "/" + url;
-    return SITE_BASE + url;
-  }
 
   function qs(sel, root) {
     return (root || document).querySelector(sel);
   }
-
   function create(tag, className) {
     var el = document.createElement(tag);
     if (className) el.className = className;
@@ -24,59 +14,21 @@
   function cleanDesc(str) {
     if (!str) return "";
     var t = String(str)
-      .replace(/<\s*br\s*\/?>(?=\s|$)/gi, " ")
+      .replace(/<\s*br\s*\/?>/gi, " ")
       .replace(/<[^>]+>/g, " ")
       .replace(/\s+/g, " ")
       .trim();
-    if (t.length <= 140) return t;
-    var cut = t.lastIndexOf(" ", 120);
-    if (cut < 0) cut = 120;
-    return t.slice(0, cut) + "…";
+    return t;
   }
 
   var CATEGORIES = [
-    {
-      key: "best_seller",
-      label: "Best Seller",
-      data: "data/best_seller.json",
-      url: "rokomari-best-seller.html"
-    },
-    {
-      key: "books",
-      label: "Books",
-      data: "data/books.json",
-      url: "rokomari-book.html"
-    },
-    {
-      key: "electronics",
-      label: "Electronics",
-      data: "data/electronics.json",
-      url: "rokomari-electronics.html"
-    },
-    {
-      key: "foods",
-      label: "Foods & Grocery",
-      data: "data/foods.json",
-      url: "rokomari-foods.html"
-    },
-    {
-      key: "kids-toys",
-      label: "Kids Toys",
-      data: "data/kids-toys.json",
-      url: "rokomari-kids-toys.html"
-    },
-    {
-      key: "beauty",
-      label: "Beauty",
-      data: "data/beauty.json",
-      url: "rokomari-beauty.html"
-    },
-    {
-      key: "others",
-      label: "Others",
-      data: "data/others.json",
-      url: "rokomari-others.html"
-    }
+    { key: "best_seller",  label: "Best Seller",     data: "data/best_seller.json",  url: "rokomari-best-seller.html" },
+    { key: "books",        label: "Books",           data: "data/books.json",        url: "rokomari-book.html" },
+    { key: "electronics",  label: "Electronics",     data: "data/electronics.json",  url: "rokomari-electronics.html" },
+    { key: "foods",        label: "Foods & Grocery", data: "data/foods.json",        url: "rokomari-foods.html" },
+    { key: "kids-toys",    label: "Kids Toys",       data: "data/kids-toys.json",    url: "rokomari-kids-toys.html" },
+    { key: "beauty",       label: "Beauty",          data: "data/beauty.json",       url: "rokomari-beauty.html" },
+    { key: "others",       label: "Others",          data: "data/others.json",       url: "rokomari-others.html" }
   ];
 
   var dataCache = {};
@@ -101,7 +53,7 @@
             author: item.author || "",
             seller: item.seller || "",
             img: item.img || "",
-            desc: item.desc || "",
+            desc: cleanDesc(item.desc || ""),
             link: item.link || "",
             categoryKey: key
           };
@@ -127,14 +79,14 @@
     if (!ul) return;
 
     var links = [
-      { href: "index.html", label: "Home" },
+      { href: "index.html",                label: "Home" },
       { href: "rokomari-best-seller.html", label: "Best Seller" },
-      { href: "rokomari-book.html", label: "Books" },
+      { href: "rokomari-book.html",        label: "Books" },
       { href: "rokomari-electronics.html", label: "Electronics" },
-      { href: "rokomari-foods.html", label: "Foods" },
-      { href: "rokomari-kids-toys.html", label: "Kids Toys" },
-      { href: "rokomari-beauty.html", label: "Beauty" },
-      { href: "rokomari-others.html", label: "Others" }
+      { href: "rokomari-foods.html",       label: "Foods" },
+      { href: "rokomari-kids-toys.html",   label: "Kids Toys" },
+      { href: "rokomari-beauty.html",      label: "Beauty" },
+      { href: "rokomari-others.html",      label: "Others" }
     ];
 
     var current = window.location.pathname.split("/").pop() || "index.html";
@@ -170,7 +122,7 @@
       card.classList.add("see-more-card");
       card.innerHTML =
         '<h3>See more deals</h3>' +
-        '<p style="font-size:0.85rem;color:#6b7280;margin-bottom:10px;">এই ক্যাটাগরির আরও প্রোমো কোড ও অফার দেখতে ক্লিক করুন।</p>' +
+        '<p style="font-size:0.85rem;color:#94a3b8;margin-bottom:10px;">এই ক্যাটাগরির আরও প্রোমো কোড ও অফার দেখতে ক্লিক করুন।</p>' +
         '<button class="btn-primary">Browse all</button>';
       return card;
     }
@@ -203,7 +155,7 @@
 
     if (item.desc) {
       var desc = create("div", "deal-desc");
-      desc.textContent = cleanDesc(item.desc);
+      desc.textContent = item.desc;
       body.appendChild(desc);
     }
 
@@ -223,13 +175,17 @@
     footer.appendChild(btn);
 
     card.appendChild(footer);
-
     return card;
   }
 
+  /* HOME: mobile vs desktop cards */
   function initHome() {
     var anchor = qs("#home-cards-anchor");
     if (!anchor) return;
+
+    var isMobile = window.matchMedia("(max-width: 767px)").matches;
+    var maxHomeDesktop = 4;
+    var maxHomeMobile  = 6;
 
     CATEGORIES.forEach(function (cat) {
       loadCategoryData(cat.key).then(function (items) {
@@ -253,8 +209,8 @@
         var wrap = create("div", "home-cards-wrapper");
         var track = create("div", "home-cards-track");
 
-        var maxHome = 8;
-        items.slice(0, maxHome).forEach(function (item) {
+        var maxItems = isMobile ? maxHomeMobile : maxHomeDesktop;
+        items.slice(0, maxItems).forEach(function (item) {
           track.appendChild(createCard(item, false));
         });
 
@@ -273,9 +229,8 @@
 
         function scrollByDir(dir) {
           var w = track.getBoundingClientRect().width || 300;
-          track.scrollBy({ left: dir * (w * 0.75), behavior: "smooth" });
+          track.scrollBy({ left: dir * (w * 0.8), behavior: "smooth" });
         }
-
         leftBtn.addEventListener("click", function () { scrollByDir(-1); });
         rightBtn.addEventListener("click", function () { scrollByDir(1); });
 
@@ -288,36 +243,58 @@
     });
   }
 
+  /* CATEGORY PAGES: show 9, then load more 9 */
   function initCategoryPage() {
     var main = qs("#main[data-src]");
     if (!main) return;
 
     var src = main.getAttribute("data-src") || "";
-    var url = src;
-
-    fetch(url)
+    fetch(src)
       .then(function (res) {
         if (!res.ok) throw new Error("Failed to load");
         return res.json();
       })
       .then(function (arr) {
         if (!Array.isArray(arr)) arr = [];
-        var norm = arr.map(function (item) {
+        var items = arr.map(function (item) {
           return {
             title: item.title || "",
             author: item.author || "",
             seller: item.seller || "",
             img: item.img || "",
-            desc: item.desc || "",
+            desc: cleanDesc(item.desc || ""),
             link: item.link || ""
           };
         });
 
         var grid = create("div", "cards-grid");
-        norm.forEach(function (item) {
-          grid.appendChild(createCard(item, false));
-        });
         main.appendChild(grid);
+
+        var batchSize = 9;
+        var index = 0;
+
+        function renderNextBatch() {
+          var slice = items.slice(index, index + batchSize);
+          slice.forEach(function (item) {
+            grid.appendChild(createCard(item, false));
+          });
+          index += slice.length;
+
+          if (index >= items.length) {
+            loadMoreBtn.style.display = "none";
+          }
+        }
+
+        var loadMoreBtn = create("button", "btn-primary");
+        loadMoreBtn.style.margin = "20px auto 0";
+        loadMoreBtn.style.display = "block";
+        loadMoreBtn.textContent = "আরো ৯ টি দেখুন";
+        loadMoreBtn.addEventListener("click", renderNextBatch);
+
+        renderNextBatch(); // first 9
+        if (items.length > batchSize) {
+          main.appendChild(loadMoreBtn);
+        }
       })
       .catch(function () {
         var msg = document.createElement("p");
@@ -326,6 +303,7 @@
       });
   }
 
+  /* SEARCH */
   function initSearch() {
     var input = qs("#header-search-input");
     var resultsBox = qs("#header-search-results");
@@ -351,7 +329,7 @@
     function showResults(items) {
       if (!items.length) {
         resultsBox.innerHTML =
-          '<div style="padding:10px;font-size:0.85rem;color:#6b7280;">কিছু পাওয়া যায়নি। অন্য কিছু লিখে চেষ্টা করুন।</div>';
+          '<div style="padding:10px;font-size:0.85rem;color:#94a3b8;">কিছু পাওয়া যায়নি। অন্য কিছু লিখে চেষ্টা করুন।</div>';
         resultsBox.classList.add("visible");
         return;
       }
